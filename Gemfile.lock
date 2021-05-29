@@ -1,6 +1,7 @@
 GEM
   remote: https://rubygems.org/
   specs:
+    dry-initializer (3.0.4)
     mustermann (1.1.1)
       ruby2_keywords (~> 0.0.1)
     nio4r (2.5.7)
@@ -21,6 +22,7 @@ PLATFORMS
   x86_64-darwin-20
 
 DEPENDENCIES
+  dry-initializer
   puma
   sinatra
 

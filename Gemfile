@@ -6,3 +6,4 @@ ruby "2.7.3"
 # gem "rails"
 gem 'sinatra'
 gem 'puma'
+gem 'dry-initializer'

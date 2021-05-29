@@ -1,23 +1,54 @@
 require 'sinatra'
+require 'dry-initializer'
 
+module Repository
+    class Value
+        def self.get
+            rand(1000).to_s
+        end
+    end
+end        
+            
 class Cashe
+    
+    #extend Dry::Initializer
+    #option :repo, default: -> { Repository::Value }
+    #@@cache = {}
+
     class << self
-        def init_cache
-            @cache ||= {}.tap do |hash|
-                hash[:value] = "Just one value"
+        def repo
+            Repository::Value
+        end
+
+        def init_dog_cache(value = nil)
+            @@cache ||= {}.tap do |hash|
+                hash[:value] = "Random: #{repo.get}"
             end
         end
+        
+        def init_cache(value = nil)
+            @cache ||= {}.tap do |hash|
+                hash[:value] = "Random: #{repo.get}"
+            end
+        end
+        def set_cache(value)
+            @cache[:value] = value
+        end
+        
     end
 end
 
-@c = Cashe.init_cache
-p @c
-
 def make_response(value)
-    return "Thread: #{Thread.current.object_id} #{value}"
+    return "Process.pid #{Process.pid} Thread: #{Thread.current.object_id} #{value}"
 end
 
 get '/cache' do
     @c = Cashe.init_cache
-    make_response @c.to_json
+    @c_dog = Cashe.init_dog_cache
+    make_response [@c, @c_dog]
+end
+
+get '/cache/:value' do
+    @c = Cashe.set_cache(params[:value])
+    make_response @c.to_json + " new value #{params[:value]}"
 end
